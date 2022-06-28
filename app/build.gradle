@@ -63,4 +63,4 @@ test {
 
 }
 
-mainClassName = 'QKART_SANITY_LOGIN.QkartSanity'
+mainClassName = 'QKART_SANITY_LOGIN.Module1.QkartSanity'

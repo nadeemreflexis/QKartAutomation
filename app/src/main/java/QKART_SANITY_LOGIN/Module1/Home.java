@@ -26,7 +26,7 @@ public class Home {
     public Boolean PerformLogout() throws InterruptedException {
         try {
             // Find and click on the Logout Button
-            WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
+            WebElement logout_button = driver.findElement(By.xpath("//button[text()='Logout']"));
             logout_button.click();
 
             // Wait for Logout to Complete
