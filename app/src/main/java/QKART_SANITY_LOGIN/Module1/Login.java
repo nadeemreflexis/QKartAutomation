@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 
 public class Login {
     RemoteWebDriver driver;
@@ -40,7 +41,7 @@ public class Login {
         password_txt_box.sendKeys(Password);
 
         // Find the Login Button
-        WebElement login_button = driver.findElement(By.xpath("//button[text()='Login to QKart']"));
+        WebElement login_button = driver.findElement(By.className("button"));
 
         // Click the login Button
         login_button.click();
@@ -55,7 +56,7 @@ public class Login {
         try {
             // Find the username label (present on the top right of the page)
             WebElement username_label;
-             username_label = this.driver.findElement(By.className("username-text"));
+            username_label = this.driver.findElement(By.className("username-text"));
             return username_label.getText().equals(Username);
         } catch (Exception e) {
             return false;
