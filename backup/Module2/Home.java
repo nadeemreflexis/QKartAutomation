@@ -14,13 +14,13 @@ public class Home {
     String url = "https://crio-qkart-frontend-qa.vercel.app";
 
     public Home(RemoteWebDriver driver) {
-    this.driver = driver;
+        this.driver = driver;
     }
 
     public void navigateToHome() {
         if (!this.driver.getCurrentUrl().equals(this.url)) {
             this.driver.get(this.url);
-}
+        }
     }
 
     public Boolean PerformLogout() throws InterruptedException {
@@ -29,7 +29,6 @@ public class Home {
             WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
             logout_button.click();
 
-            // SLEEP_STMT_10: Wait for Logout to complete
             // Wait for Logout to Complete
             Thread.sleep(3000);
 
@@ -54,8 +53,6 @@ public class Home {
             searchBoxElement.clear();
             searchBoxElement.sendKeys(product);
             Thread.sleep(3000);
-            // WebDriverWait wait = new WebDriverWait(driver, 30);
-            // wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[contains(@class,'css-1qw96cp')]/p"), product));
             return true;
         } catch (Exception e) {
             System.out.println("Error while searching for a product: " + e.getMessage());
@@ -66,7 +63,7 @@ public class Home {
     /*
      * Returns Array of Web Elements that are search results and return the same
      */
-public List<WebElement> getSearchResults() {
+    public List<WebElement> getSearchResults() {
         List<WebElement> searchResults = new ArrayList<WebElement>() {
         };
         try {
@@ -105,6 +102,7 @@ public List<WebElement> getSearchResults() {
      */
     public Boolean addProductToCart(String productName) {
         try {
+            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             /*
              * Iterate through each product on the page to find the WebElement corresponding
              * to the matching productName
@@ -117,16 +115,13 @@ public List<WebElement> getSearchResults() {
                     driver.findElements(By.className("MuiCardContent-root"));
             WebElement addToCarElement = driver.findElement(By.cssSelector(".MuiCardActions-root>button"));
             for (WebElement searchedProduct : searchedProducts) {
-                String searchProductName = searchedProduct.findElement(By.tagName("p")).getText();
-                if (searchProductName.trim().equals(productName)) {
+                WebElement searchProductName = searchedProduct.findElement(By.tagName("p"));
+                // String searchProductName = searchedProduct.findElement(By.tagName("p")).getText();
+                if (searchProductName.getText().equalsIgnoreCase(productName))
                     addToCarElement.click();
-                    WebDriverWait wait = new WebDriverWait(driver, 30);
-                    wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@class='MuiBox-root css-1gjj37g']/div[1][text()='"+productName+"']")));
-                    return true;
-                }
+                break;
             }
-            System.out.println("Unable to find the given product: " + productName);
-            return false;
+            return true;
         } catch (Exception e) {
             System.out.println("Exception while performing add to cart: " + e.getMessage());
             return false;
@@ -178,28 +173,20 @@ public List<WebElement> getSearchResults() {
                     WebElement decreaseQuantityButton =
                             cartElement.findElement(By.xpath("//div[contains(text(),'" + productName
                                     + "')]/following-sibling::div//button[1]"));
-                    WebDriverWait wait;
-                    while (currentQuantity != quantity) {
-                        if (currentQuantity < quantity) {
-                            increaseQuantityButton.click();
-                            wait = new WebDriverWait(driver, 30);
-                            wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[contains(text(),'" + productName
-                                    + "')]/following-sibling::div//div[@data-testid='item-qty']"), String.valueOf(
-                                            currentQuantity + 1)));
-                            currentQuantity++;
-                            status = true;
-                        } else if (currentQuantity > quantity) {
+                    while (currentQuantity != quantity) {   
+                        if (currentQuantity < quantity) {  
+                            increaseQuantityButton.click();  
+                            Thread.sleep(1000);
+                            currentQuantity = Integer.valueOf(currentProductQuantity.getText()); 
+                            status = true; 
+                        } else if (currentQuantity > quantity) {  
                             decreaseQuantityButton.click();
-                            wait = new WebDriverWait(driver, 30);
-                            wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                                    By.xpath("//div[contains(text(),'" + productName
-                                            + "')]/following-sibling::div//div[@data-testid='item-qty']"),
-                                    String.valueOf(currentQuantity - 1)));
+                            Thread.sleep(1000);
                             if (currentQuantity > 1) {
                                 currentQuantity = Integer.valueOf(currentProductQuantity.getText());
                             }
                             else if (currentQuantity == 1) {
-                                currentQuantity--;
+                                currentQuantity = currentQuantity - 1; 
                             }
                             status = true;
                         } else {
@@ -247,4 +234,3 @@ public List<WebElement> getSearchResults() {
         }
     }
 }
-

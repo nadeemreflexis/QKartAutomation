@@ -27,6 +27,7 @@ public class Checkout {
      */
     public Boolean addNewAddress(String addresString) {
         try {
+            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             /*
              * Click on the "Add new address" button, enter the addressString in the address
              * text box and click on the "ADD" button to save the address
@@ -38,8 +39,6 @@ public class Checkout {
             addressTextAreaElement.sendKeys(addresString);
             WebElement addButton = driver.findElement(By.className("MuiButton-contained"));
             addButton.click();
-            WebDriverWait wait = new WebDriverWait(driver, 30);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("address-item")));
             return true;
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
@@ -62,10 +61,9 @@ public class Checkout {
             for (WebElement address : addressList){
                 if(address.getText().equalsIgnoreCase(addressToSelect))
                     address.click();
-                else
-                    System.out.println("Unable to find the given address");
                 break;
             }
+            // System.out.println("Unable to find the given address");
             return true;
         } catch (Exception e) {
             System.out.println("Exception Occurred while selecting the given address: " + e.getMessage());
@@ -105,7 +103,7 @@ public class Checkout {
             .equalsIgnoreCase("You do not have enough balance in your wallet for this purchase")) {
                 status = true;
             }
-        return status;
+            return status;
         } catch (Exception e) {
             System.out.println("Exception while verifying insufficient balance message: " + e.getMessage());
             return false;

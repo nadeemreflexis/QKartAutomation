@@ -40,7 +40,6 @@ public class SearchResult {
             // Find the link of size chart in the parentElement and click on it
             WebElement sizeChartElement = this.parentElement.findElement(By.tagName("button"));
             sizeChartElement.click();
-            Thread.sleep(3000);
             return true;
         } catch (Exception e) {
             System.out.println("Exception while opening Size chart: " + e.getMessage());
@@ -55,6 +54,8 @@ public class SearchResult {
         try {
             Thread.sleep(2000);
             Actions action = new Actions(driver);
+
+            // Clicking on "ESC" key closes the size chart modal
             action.sendKeys(Keys.ESCAPE);
             action.perform();
             Thread.sleep(2000);
@@ -95,10 +96,9 @@ public class SearchResult {
      * Return Boolean if the table headers and body of the size chart matches the
      * expected values
      */
-public Boolean validateSizeChartContents(List<String> expectedTableHeaders, List<List<String>> expectedTableBody,
+    public Boolean validateSizeChartContents(List<String> expectedTableHeaders, List<List<String>> expectedTableBody,
             WebDriver driver) {
-        // Boolean headerStatus = false, status=false;
-        boolean status = false;
+        Boolean headerStatus = false, status=false;
 
          try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 04: MILESTONE 2
@@ -111,70 +111,35 @@ public Boolean validateSizeChartContents(List<String> expectedTableHeaders, List
              * Validate that the contents of expectedTableBody are present in the table body
              * in the same order
              */
-        	// int colElementCount =0;
-            // List<WebElement> tableHeaders = driver.findElements(By.xpath("//table/thead/tr/th"));
-            // for (WebElement tableHeader : tableHeaders) {
-            //     for (String expectedTableHeader : expectedTableHeaders) {
-            //         if (tableHeader.getText().trim().equals(expectedTableHeader)) {
-            //             colElementCount = colElementCount+1;
-            //             break;
-            //         }
-            //     } 
-            // }
-            // if(colElementCount == tableHeaders.size()) {
-            // 	headerStatus = true;
-            // }
-            // List<List<String>> actualTableBody = new ArrayList<List<String>>();
-            // List<WebElement> tableBodyRows = driver.findElements(By.xpath("//table/tbody/tr"));
-            //     for(int i=1;i<=tableBodyRows.size();i++) {
-            //     	// specific row
-            //     	String specificRow = "//table/tbody/tr["+ i +"]";
-            //     	List<WebElement> allSpecificRowElements = driver.findElement(By.xpath(specificRow))
-        	// 				.findElements(By.tagName("td"));
-            //     	List<String> eachRowElements = new ArrayList<String>();
-            //     	for (WebElement rowElement : allSpecificRowElements) {
-            //     		eachRowElements.add(rowElement.getText().trim());
-            //         }
-            //     	actualTableBody.add(eachRowElements);
-            //    }
-            // if (headerStatus && actualTableBody.equals(
-            //         expectedTableBody)) 
-            //     status = true;
-            // return status;
-            WebElement sizeChartParent = driver.findElement(By.className("MuiTableContainer-root"));
-            WebElement tableElement = sizeChartParent.findElement(By.tagName("table"));
-            List<WebElement> tableHeader = tableElement.findElement(By.tagName("thead")).findElements(By.tagName("th"));
-
-            // Check table headers match
-            String tempHeaderValue;
-            for (int i = 0; i < expectedTableHeaders.size(); i++) {
-                tempHeaderValue = tableHeader.get(i).getText();
-
-                if (!expectedTableHeaders.get(i).equals(tempHeaderValue)) {
-                    System.out.println("Failure in Header Comparison: Expected:  " + expectedTableHeaders.get(i)
-                            + " Actual: " + tempHeaderValue);
-                    status = false;
-                }
-            }
-
-            List<WebElement> tableBodyRows = tableElement.findElement(By.tagName("tbody"))
-                    .findElements(By.tagName("tr"));
-
-            // Check table body match
-            List<WebElement> tempBodyRow;
-            for (int i = 0; i < expectedTableBody.size(); i++) {
-                tempBodyRow = tableBodyRows.get(i).findElements(By.tagName("td"));
-
-                for (int j = 0; j < expectedTableBody.get(i).size(); j++) {
-                    tempHeaderValue = tempBodyRow.get(j).getText();
-
-                    if (!expectedTableBody.get(i).get(j).equals(tempHeaderValue)) {
-                        System.out.println("Failure in Body Comparison: Expected:  " + expectedTableBody.get(i).get(j)
-                                + " Actual: " + tempHeaderValue);
-                        status = false;
+        	int colElementCount =0;
+            List<WebElement> tableHeaders = driver.findElements(By.xpath("//table/thead/tr/th"));
+            for (WebElement tableHeader : tableHeaders) {
+                for (String expectedTableHeader : expectedTableHeaders) {
+                    if (tableHeader.getText().trim().equals(expectedTableHeader)) {
+                        colElementCount = colElementCount+1;
+                        break;
                     }
-                }
+                } 
             }
+            if(colElementCount == tableHeaders.size()) {
+            	headerStatus = true;
+            }
+            List<List<String>> actualTableBody = new ArrayList<List<String>>();
+            List<WebElement> tableBodyRows = driver.findElements(By.xpath("//table/tbody/tr"));
+                for(int i=1;i<=tableBodyRows.size();i++) {
+                	// specific row
+                	String specificRow = "//table/tbody/tr["+ i +"]";
+                	List<WebElement> allSpecificRowElements = driver.findElement(By.xpath(specificRow))
+        					.findElements(By.tagName("td"));
+                	List<String> eachRowElements = new ArrayList<String>();
+                	for (WebElement rowElement : allSpecificRowElements) {
+                		eachRowElements.add(rowElement.getText().trim());
+                    }
+                	actualTableBody.add(eachRowElements);
+               }
+            if (headerStatus && actualTableBody.equals(
+                    expectedTableBody)) 
+                status = true;
             return status;
         } catch (Exception e) {
             System.out.println("Error while validating chart contents");
