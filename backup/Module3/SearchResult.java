@@ -40,7 +40,7 @@ public class SearchResult {
             // Find the link of size chart in the parentElement and click on it
             WebElement sizeChartElement = this.parentElement.findElement(By.tagName("button"));
             sizeChartElement.click();
-            Thread.sleep(3000);
+        Thread.sleep(3000);
             return true;
         } catch (Exception e) {
             System.out.println("Exception while opening Size chart: " + e.getMessage());
